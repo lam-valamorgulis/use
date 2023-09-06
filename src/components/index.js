@@ -7,4 +7,4 @@ import Box from './Box';
 import Loader from './Loader';
 
 
-export { NavBar, Logo, SearchBox, NumResult,Main,Box,Loader };
+export { NavBar, Logo, SearchBox, NumResult, Main, Box, Loader };

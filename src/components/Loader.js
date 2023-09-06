@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Loader = ({ children }) => {
+const Loader = () => {
   return <p className="loader">Loading...</p>;
 };
 

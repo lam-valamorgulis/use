@@ -1,14 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { KEY } from './components';
 import './style.css';
-import { NavBar, Main, Box, Loader } from './components';
-
-const KEY = '231a5dca';
+import {
+  NavBar,
+  Main,
+  Box,
+  Loading,
+  MovieList,
+  ErrorMessage,
+  MovieDetails,
+  WatchedSummary,
+  WatchedMoviesList,
+} from './components';
 
 export default function App() {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedId, setSelectedId] = useState('');
+  const [watched, setWatched] = useState([]);
+
+  const handleSelectMovie = (id) => {
+    setSelectedId((selectedId) => (id === selectedId ? null : id));
+  };
+
+  const handleAddWatched = (movie) => {
+    setWatched((watched) => [...watched, movie]);
+  };
+
+  const handleDeleteWatched = (id) => {
+    setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
+  };
+
+  function handleCloseMovie() {
+    setSelectedId(null);
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -17,7 +44,7 @@ export default function App() {
       try {
         setIsLoading(true);
         setError('');
-        console.log(`http://www.omdbapi.com/?apikey=${KEY}&s=${query}`);
+
         const res = await fetch(
           `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
           { signal: controller.signal }
@@ -41,6 +68,12 @@ export default function App() {
       }
     };
 
+    if (query.length < 3) {
+      setMovies([]);
+      setError('');
+      return;
+    }
+
     fetchMovies();
     return () => controller.abort();
   }, [query]);
@@ -50,15 +83,15 @@ export default function App() {
       <NavBar query={query} setQuery={setQuery} />
       <Main>
         <Box>
-          {isLoading && <Loader />}
-          {/* {!isLoading && !error && (
+          {isLoading && <Loading />}
+          {!isLoading && !error && (
             <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
           )}
-          {error && <ErrorMessage message={error} />} */}
+          {error && <ErrorMessage message={error} />}
         </Box>
 
         <Box>
-          {/* {selectedId ? (
+          {selectedId ? (
             <MovieDetails
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
@@ -73,7 +106,7 @@ export default function App() {
                 onDeleteWatched={handleDeleteWatched}
               />
             </>
-          )} */}
+          )}
         </Box>
       </Main>
     </>

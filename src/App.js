@@ -80,7 +80,7 @@ export default function App() {
 
   return (
     <>
-      <NavBar query={query} setQuery={setQuery} />
+      <NavBar query={query} setQuery={setQuery} movies={movies}/>
       <Main>
         <Box>
           {isLoading && <Loading />}
